@@ -24,6 +24,16 @@ module ObfuscateId
       end
       super(*args)
     end
+    
+    def find_one(id)
+      return super unless has_obfuscated_id?
+      where(id: ObfuscateId.show(id)).first or super
+    end
+    
+    def exists?(id = false)
+      return super unless has_obfuscated_id?
+      super id: (ObfuscateId.show(id) rescue false)
+    end
 
     def has_obfuscated_id?
       true
